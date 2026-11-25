@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Admin — Bokáta Restaurante</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Tela de Login -->
+  <section id="loginScreen" class="login-wrapper">
+    <div class="login-card">
+      <span class="brand-badge">Acesso Restrito</span>
+      <h2>Bokáta Restaurante — Admin</h2>
+      <p>Inicie sessão com as credenciais administrativas para gerir o catálogo e as compras.</p>
+
+      <form id="loginForm" class="checkout-form">
+        <label class="field">
+          <span>Utilizador</span>
+          <input type="text" id="adminUser" value="admin" placeholder="admin" required />
+        </label>
+
+        <label class="field">
+          <span>Palavra-passe</span>
+          <input type="password" id="adminPass" value="senha123" placeholder="••••••••" required />
+        </label>
+
+        <p id="loginError" class="login-error hidden">Utilizador ou palavra-passe incorretos.</p>
+
+        <button type="submit" class="btn btn-primary btn-full">Entrar no Painel</button>
+        <a href="index.html" class="btn btn-outline btn-full">Voltar para a Loja</a>
+      </form>
+    </div>
+  </section>
+
+  <!-- Dashboard Administrativo -->
+  <div id="adminDashboard" class="hidden">
+    <header class="header">
+      <div class="container header-content">
+        <div class="brand">
+          <span class="brand-badge">Gestão</span>
+          <span class="brand-name">Bokáta Admin</span>
+        </div>
+
+        <nav class="nav" aria-label="Navegação administrativa">
+          <a href="index.html" class="nav-link">← Ver Loja</a>
+          <button id="resetDemoBtn" class="btn btn-outline btn-sm" type="button">
+            Restaurar Catálogo
+          </button>
+          <button id="logoutBtn" class="btn btn-danger btn-sm" type="button">
+            Terminar Sessão
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container main-section">
+      <!-- Indicadores -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <span>Produtos Ativos</span>
+          <strong id="statProducts">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Pedidos Registados</span>
+          <strong id="statOrders">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Ticket Médio</span>
+          <strong id="statAvgTicket">R$ 0,00</strong>
+        </div>
+        <div class="stat-card">
+          <span>Faturação Total</span>
+          <strong id="statRevenue">R$ 0,00</strong>
+        </div>
+      </section>
+
+      <!-- Formulário de Cadastro / Edição com Pré-visualização -->
+      <section class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <span class="eyebrow">Catálogo</span>
+            <h2 id="formTitle">Adicionar Novo Produto</h2>
+            <p id="formSubtitle">Preencha os campos e verifique a pré-visualização da imagem</p>
+          </div>
+          <button id="cancelEditBtn" class="btn btn-outline btn-sm hidden" type="button">
+            Cancelar Edição
+          </button>
+        </div>
+
+        <div class="admin-form-layout">
+          <form id="productForm" class="product-form">
+            <input type="hidden" id="editingProductId" />
+
+            <label class="field">
+              <span>Nome do Produto</span>
+              <input type="text" id="prodName" placeholder="Ex.: Filé à Parmegiana" required />
+            </label>
+
+            <label class="field">
+              <span>Categoria</span>
+              <select id="prodCategory" required>
+                <option value="Pratos">Pratos</option>
+                <option value="Lanches">Lanches</option>
+                <option value="Porções">Porções</option>
+                <option value="Bebidas">Bebidas</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Preço (R$)</span>
+              <input type="number" id="prodPrice" step="0.01" min="0.50" placeholder="39.90" required />
+            </label>
+
+            <label class="field">
+              <span>URL da Imagem</span>
+              <input
+                type="url"
+                id="prodImage"
+                placeholder="https://images.unsplash.com/..."
+                required
+              />
+            </label>
+
+            <label class="field field-full">
+              <span>Descrição</span>
+              <input
+                type="text"
+                id="prodDescription"
+                placeholder="Ingredientes, porção e detalhes do prato"
+                required
+              />
+            </label>
+
+            <div class="form-actions field-full">
+              <button type="submit" id="saveProductBtn" class="btn btn-primary">
+                Guardar Produto
+              </button>
+            </div>
+          </form>
+
+          <aside class="preview-box" aria-label="Pré-visualização do produto">
+            <span class="preview-label">Pré-visualização</span>
+            <img
+              id="previewImg"
+              src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80"
+              alt="Pré-visualização do produto"
+            />
+            <div class="preview-meta">
+              <strong id="previewName">Nome do Prato</strong>
+              <span id="previewPrice">R$ 0,00</span>
+            </div>
+            <p id="previewDesc">A descrição do produto aparecerá aqui em tempo real.</p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Tabela de Produtos -->
+      <section class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <span class="eyebrow">Gestão de Itens</span>
+            <h2>Produtos Cadastrados</h2>
+            <p>Edite preços, fotos, categorias ou remova itens do cardápio</p>
+          </div>
+          <input
+            type="search"
+            id="adminSearchProduct"
+            class="search-input"
+            placeholder="Filtrar produtos..."
+          />
+        </div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Imagem</th>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Preço</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="adminProductsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Histórico de Compras -->
+      <section class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <span class="eyebrow">Vendas & Pedidos</span>
+            <h2>Histórico de Compras</h2>
+            <p>Consulte os pedidos realizados, filtre por estado ou pesquise por cliente</p>
+          </div>
+
+          <div class="history-controls">
+            <input
+              type="search"
+              id="orderSearchInput"
+              class="search-input"
+              placeholder="Buscar cliente ou código..."
+            />
+            <select id="orderStatusFilter" class="status-select">
+              <option value="Todos">Todos os estados</option>
+              <option value="Novo Pedido">Novo Pedido</option>
+              <option value="Em Preparo">Em Preparo</option>
+              <option value="Saiu para Entrega">Saiu para Entrega</option>
+              <option value="Concluído">Concluído</option>
+            </select>
+            <button id="clearHistoryBtn" class="btn btn-danger btn-sm" type="button">
+              Limpar Histórico
+            </button>
+          </div>
+        </div>
+
+        <div id="orderHistoryList" class="history-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
